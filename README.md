@@ -1,7 +1,7 @@
 running
 =======
 
-Blog-like system for keeping track of runs based on Jekyll
+Lightweight blog-like system for keeping track of runs based on Jekyll
 
 
 To log a run
