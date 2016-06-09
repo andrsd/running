@@ -23,6 +23,15 @@ module Jekyll
             d = Time.new(year, month, day, hour, minute, 0)
             d.strftime('%b %d, %Y') + ' at ' + d.strftime('%H:%M')
         end
+
+        def jsdate(str)
+          year = str[0, 4]
+          month = str[4, 2]
+          day = str[6, 2]
+          hour = str[9, 2]
+          minute = str[11, 2]
+          year + ", " + month + ", " + day + ", " + hour + ", " + minute
+        end
     end
 end
 

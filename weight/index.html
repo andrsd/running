@@ -2,6 +2,70 @@
 layout: default
 ---
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+google.charts.load('current', {'packages': ['corechart', 'line']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+  var weight = new google.visualization.DataTable();
+  weight.addColumn('date', 'Day');
+  weight.addColumn('number', 'weight [{{ site.units.weight }}]');
+  weight.addRows([
+    {% for weight in site.data.weight limit: 30 %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].weight }}],
+    {% endfor %}
+  ]);
+  var weight_opts = {
+    hAxis: {
+      title: '',
+      text_position: 'out'
+    },
+    vAxis: {
+      title: 'weight [{{ site.units.weight }}]'
+    },
+    legend: {
+      position: 'none'
+    },
+    chartArea: {
+      left: 90,
+      right: 0,
+      top: 10,
+      bottom: 30
+    }
+  };
+  var weight_chart = new google.visualization.LineChart(document.getElementById('weight-chart'));
+  weight_chart.draw(weight, weight_opts);
+
+  var fat = new google.visualization.DataTable();
+  fat.addColumn('date', 'Day');
+  fat.addColumn('number', 'fat [%]');
+  fat.addRows([
+    {% for weight in site.data.weight limit: 30 %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].fat }}],
+    {% endfor %}
+  ]);
+  var fat_opts = {
+    hAxis: {
+      title: '',
+      text_position: 'out'
+    },
+    vAxis: {
+      title: 'body fat [%]'
+    },
+    legend: {
+      position: 'none'
+    },
+    chartArea: {
+      left: 90,
+      right: 0,
+      top: 10,
+      bottom: 30
+    }
+  };
+  var fat_chart = new google.visualization.LineChart(document.getElementById('fat-chart'));
+  fat_chart.draw(fat, fat_opts);
+}
+</script>
+
 {% for weight in site.data.weight %}
   {% assign latest = weight[1] %}
 {% endfor %}
@@ -17,9 +81,13 @@ layout: default
   </ul>
 </div>
 
+<!--
 <div><span class="date_range right">April 2016 - May 2016</span></div>
+-->
 
-<div id="weight-chart" style="border: 1px solid #000; height: 200px; margin-bottom: 2em; margin-top: 2em">
+<div id="weight-chart" style="border: 0; height: 150px; margin-bottom: 2em; margin-top: 2em">
+</div>
+<div id="fat-chart" style="border: 0; height: 150px; margin-bottom: 2em; margin-top: 2em">
 </div>
 
 <h3 style="text-transform: uppercase">History</h3>
