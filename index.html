@@ -1,0 +1,48 @@
+---
+layout: default
+---
+
+<div class="home">
+
+  <div style="float: left; width: 450px: margin: 0">
+    <div style="display: table">
+      <ul class="box">
+        <li style="text-transform: uppercase">Total {{ site.units.distance }}</li>
+        <li class="value">1 409</li>
+      </ul>
+      <ul class="box">
+        <li style="text-transform: uppercase">Total runs</li>
+        <li class="value">260</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="width: 300px; float: right; margin: 0">
+    <h4 style="display: inline; text-transform: uppercase">Personal Records</h4>
+
+    <ul style="list-style: none; margin-left: 0">
+      <li>
+        <div style="font-weight: 500">5K</div>
+        <div style="font-size: 80%; color: #888">26:36<span class="right">Sep 23, 2013</span></div>
+      </li>
+      <li>
+        <div style="font-weight: 500">farthest</div>
+        <div style="font-size: 80%; color: #888">5.13 {{ site.units.distance }}<span class="right">April 6, 2014</span></div>
+      </li>
+    </ul>
+  </div>
+
+  <div style="clear: both">
+  </div>
+
+  <h3 style="text-transform: uppercase">Recent Activities</h3>
+  <ul class="post-list">
+    {% for post in site.posts %}
+      <li>
+        <span class="post-meta" style="width: 150px; display: inline-block">{{ post.date | date: "%b %-d, %Y" }}</span>
+        <a href="{{ post.url | prepend: site.baseurl }}" style="text-transform: uppercase">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+</div>

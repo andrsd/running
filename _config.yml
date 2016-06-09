@@ -1,0 +1,13 @@
+title: running
+email: andrsd@gmail.com
+description: My running. Open source.
+baseurl: ""
+url: "http://running.andrs.name"
+github_username: andrsd
+
+# Build settings
+markdown: kramdown
+
+units:
+  distance: miles
+  weight: lbs

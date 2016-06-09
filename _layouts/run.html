@@ -1,0 +1,73 @@
+---
+layout: default
+---
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <p class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%A, %B %-d, %Y" }}</time>
+      {% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>
+      {% endif %}
+    </p>
+    <h1 class="post-title" itemprop="name headline" style="font-size: 1.5em; text-transform: uppercase">{{ page.title }}</h1>
+  </header>
+
+  <div style="display: table">
+    <ul class="box">
+      <li class="title" style="text-transform: uppercase">{{ site.units.distance }}</li>
+      <li class="value">{{ page.distance }}</li>
+    </ul>
+    <ul class="box">
+      <li class="title">DURATION</li>
+      <li class="value">{{ page.duration | timeDuration }}</li>
+    </ul>
+    <ul class="box">
+      <li class="title">AVG PACE</li>
+      <li class="value">{{ page.avg_pace | pace }}</li>
+    </ul>
+    <ul class="box">
+      <li class="title">CALORIES BURNED</li>
+      <li class="value">{{ page.calories }}</li>
+    </ul>
+  </div>
+
+  <div id="map" style="height: 400px; border: 1px solid #888">
+    {{ page.kml }}
+  </div>
+
+  <div style="margin: 1em 0; height: 100px">
+    <div style="width: 20%; float: left">
+      <ul class="box" style="width: 120px; margin: 0">
+        <li class="title">TOTAL CLIMB</li>
+        <li class="value">{{ page.total_climb }}</li>
+      </ul>
+    </div>
+    <div id="climb-chart" style="width: 79%; height: 98px; border: 1px solid #888; float: right">
+    </div>
+  </div>
+
+  <div style="margin: 1em 0; height: 100px">
+    <div style="width: 20%; float: left">
+      <ul class="box" style="width: 120px; margin: 0">
+        <li class="title">AVG PACE</li>
+        <li class="value">{{ page.avg_pace | pace }}</li>
+      </ul>
+    </div>
+    <div id="avgpage-chart" style="width: 79%; height: 98px; border: 1px solid #888; float: right">
+    </div>
+  </div>
+
+  <ul style="width: 50%; list-style: none; margin-left: 0; font-size: 90%; margin-top: 1em; color: #666">
+    <li style="font-weight: 500; color: #000">Splits <span class="right">Pace <span style="display: inline-block; width: 100px; text-align: right">Climb</span></span></li>
+    {% for split in page.splits %}
+    <li>{{ split.name }} <span class="right">{{ split.pace | pace }} <span style="display: inline-block; width: 75px; text-align: right">{{ split.climb }}</span></span></li>
+    {% endfor %}
+</ul>
+
+<h4 style="text-transform: uppercase">Notes</h4>
+
+<div>
+  {{ page.content }}
+</div>
+
+</article>
