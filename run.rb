@@ -96,7 +96,7 @@ class Run
               @pace.push(p.round(0).to_i)
             end
 
-            mile = (@distance / 1609.34).ceil
+            mile = meters_to_miles(@distance).ceil
             if mile > last_mile
               @splits.push(Hash[
                 "name" => (mile - 1).to_s + " mile",
