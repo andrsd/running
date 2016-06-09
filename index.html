@@ -2,6 +2,23 @@
 layout: default
 ---
 
+{% assign max_distance = 0 %}
+{% assign max_distance_date = 0 %}
+
+{% assign min_pace_5k = 1000000 %}
+{% assign date_5k = 0 %}
+
+{% for post in site.posts %}
+  {% if post.distance > max_distance %}
+    {% assign max_distance = post.distance %}
+    {% assign max_distance_date = post.date %}
+  {% endif %}
+  {% if post.distance == 3.2 and post.avg_pace < min_pace_5k %}
+    {% assign min_pace_5k = post.avg_pace %}
+    {% assign date_5k = post.date %}
+  {% endif %}
+{% endfor %}
+
 <div class="home">
 
   <div style="float: left; width: 450px: margin: 0">
@@ -23,11 +40,15 @@ layout: default
     <ul style="list-style: none; margin-left: 0">
       <li>
         <div style="font-weight: 500">5K</div>
-        <div style="font-size: 80%; color: #888">26:36<span class="right">Sep 23, 2013</span></div>
+        <div style="font-size: 80%; color: #888">{{ min_pace_5k | pace }}
+          <span class="right">{{ date_5k | date: "%b %-d, %Y" }}</span>
+        </div>
       </li>
       <li>
         <div style="font-weight: 500">farthest</div>
-        <div style="font-size: 80%; color: #888">5.13 {{ site.units.distance }}<span class="right">April 6, 2014</span></div>
+        <div style="font-size: 80%; color: #888">{{ max_distance }} {{ site.units.distance }}
+          <span class="right">{{ max_distance_date | date: "%b %-d, %Y" }}</span>
+        </div>
       </li>
     </ul>
   </div>
