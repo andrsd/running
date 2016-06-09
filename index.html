@@ -41,6 +41,7 @@ layout: default
       <li>
         <span class="post-meta" style="width: 150px; display: inline-block">{{ post.date | date: "%b %-d, %Y" }}</span>
         <a href="{{ post.url | prepend: site.baseurl }}" style="text-transform: uppercase">{{ post.title }}</a>
+          <span class="right">{{ post.distance }} {{ site.units.distance }} | {{ post.duration | timeDuration }}</span>
       </li>
     {% endfor %}
   </ul>
