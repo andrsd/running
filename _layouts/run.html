@@ -124,16 +124,13 @@ layout: default
   google.charts.setOnLoadCallback(drawChart);
 
   function drawChart() {
-    var climb = new google.visualization.DataTable();
-    climb.addColumn('number', 'Day');
-    climb.addColumn('number', 'climb');
-    climb.addRows([
-      [0, 1],
-      [1, 0],
-      [2, 1],
-      [3, 1],
+    var elevation = new google.visualization.DataTable();
+    elevation.addColumn('number', 'Day');
+    elevation.addColumn('number', 'elevation');
+    elevation.addRows([{% for e in page.elevation %}
+      [{{ forloop.index }}, {{ e }}],{% endfor %}
     ]);
-    var climb_opts = {
+    var elevation_opts = {
       hAxis: {
         title: '',
         gridlines: {
@@ -145,7 +142,7 @@ layout: default
         gridlines: {
           count: 0
         },
-        baseline: 0
+        baseline: 1420
       },
       legend: {
         position: 'none'
@@ -157,16 +154,14 @@ layout: default
         bottom: 0
       }
     };
-    var climb_chart = new google.visualization.LineChart(document.getElementById('climb-chart'));
-    climb_chart.draw(climb, climb_opts);
+    var elevation_chart = new google.visualization.LineChart(document.getElementById('elevation-chart'));
+    elevation_chart.draw(elevation, elevation_opts);
 
     var pace = new google.visualization.DataTable();
     pace.addColumn('number', 'Day');
     pace.addColumn('number', 'pace');
-    pace.addRows([
-      [0, 8.5],
-      [1, 8.51],
-      [2, 8.5]
+    pace.addRows([{% for p in page.pace %}
+      [{{ forloop.index }}, {{ p }}],{% endfor %}
     ]);
     var pace_opts = {
       hAxis: {
@@ -179,9 +174,7 @@ layout: default
         title: '',
         gridlines: {
           count: 0
-        },
-        maxValue: 9,
-        baseline: -10
+        }
       },
       legend: {
         position: 'none'
@@ -205,7 +198,7 @@ layout: default
         <li class="value">{{ page.total_climb }}</li>
       </ul>
     </div>
-    <div id="climb-chart" style="width: 79%; height: 98px; border: 0; float: right">
+    <div id="elevation-chart" style="width: 79%; height: 98px; border: 0; float: right">
     </div>
   </div>
 
