@@ -32,6 +32,8 @@ class Run
     @calories = 0
     @total_climb = 0
     @elevation = Array[ ]
+    @max_ele = -10000       # solid pressure this deep
+    @min_ele =  10000       # higher than mount everest
     @pace = Array[ ]
     @splits = Array[ ]
     @map_center_lat = 0
@@ -77,6 +79,13 @@ class Run
           lon = Regexp.last_match(2).to_f
           ele = Regexp.last_match(3).to_f
           time = Time.parse(Regexp.last_match(4)).to_time
+
+          if ele > @max_ele
+            @max_ele = ele
+          end
+          if ele < @min_ele
+            @min_ele = ele
+          end
 
           if (first)
             last_time = time
@@ -168,6 +177,8 @@ class Run
     for i in @elevation
       puts "  - " + i.to_s
     end
+    puts "min_ele: " + @min_ele.to_s
+    puts "max_ele: " + @max_ele.to_s
     puts "pace:"
     for i in @pace
       puts "  - " + Time.at(i).utc.strftime("%M:%S").to_s

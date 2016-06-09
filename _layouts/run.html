@@ -142,7 +142,9 @@ layout: default
         gridlines: {
           count: 0
         },
-        baseline: 1420
+        minValue: {{ page.min_ele | minus:10 }},
+        maxValue: {{ page.max_ele | plus:10 }},
+        baseline: {{ page.min_ele | minus:20 }}
       },
       legend: {
         position: 'none'
