@@ -29,7 +29,7 @@ layout: default
     <div style="display: table">
       <ul class="box">
         <li style="text-transform: uppercase">Total {{ site.units.distance }}</li>
-        <li class="value">{{ total_miles }}</li>
+        <li class="value">{{ total_miles | distance }}</li>
       </ul>
       <ul class="box">
         <li style="text-transform: uppercase">Total runs</li>
@@ -66,7 +66,7 @@ layout: default
       <li>
         <span class="post-meta" style="width: 150px; display: inline-block">{{ post.date | date: "%b %-d, %Y" }}</span>
         <a href="{{ post.url | prepend: site.baseurl }}" style="text-transform: uppercase">{{ post.title }}</a>
-          <span class="right">{{ post.distance }} {{ site.units.distance }} | {{ post.duration | timeDuration }}</span>
+          <span class="right">{{ post.distance | distance }} {{ site.units.distance }} | {{ post.duration | timeDuration }}</span>
       </li>
     {% endfor %}
   </ul>

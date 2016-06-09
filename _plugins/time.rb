@@ -14,6 +14,10 @@ module Jekyll
             mins.to_i.to_s + ':' + sprintf("%02d", secs.to_i)
         end
 
+        def distance(dist)
+            sprintf("%.02f", dist.to_f)
+        end
+
         def wdate(str)
             year = str[0, 4].to_i
             month = str[4, 2].to_i
