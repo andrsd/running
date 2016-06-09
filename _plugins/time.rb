@@ -26,7 +26,7 @@ module Jekyll
 
         def jsdate(str)
           year = str[0, 4]
-          month = str[4, 2]
+          month = ((str[4, 2].to_i) - 1).to_s
           day = str[6, 2]
           hour = str[9, 2]
           minute = str[11, 2]
