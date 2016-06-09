@@ -10,4 +10,4 @@ markdown: kramdown
 
 units:
   distance: miles
-  weight: lbs
+  weight: kgs

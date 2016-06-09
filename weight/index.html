@@ -2,14 +2,18 @@
 layout: default
 ---
 
+{% for weight in site.data.weight %}
+  {% assign latest = weight[1] %}
+{% endfor %}
+
 <div style="display: table">
   <ul class="box">
     <li style="text-transform: uppercase">Weight</li>
-    <li class="value">155.3 lbs</li>
+    <li class="value">{{ latest.weight }} {{ site.units.weight }}</li>
   </ul>
   <ul class="box">
     <li style="text-transform: uppercase">Body fat</li>
-    <li class="value">14.7 %</li>
+    <li class="value">{{ latest.fat }} %</li>
   </ul>
 </div>
 
@@ -21,7 +25,13 @@ layout: default
 <h3 style="text-transform: uppercase">History</h3>
 
 <ul class="history">
-  <li>Today at 6:34<span class="right">148.2 lbs <span class="fat">15.3 % fat</span></span></li>
-  <li>Saturday, May 28 at 6:16<span class="right">147.8 lbs <span class="fat">14.8 % fat</span></span></li>
-  <li>Friday, May 27 at 21:00<span class="right">148.7 lbs <span class="fat">14.7 % fat</span></span></li>
+  {% for weight in site.data.weight reversed limit: 10 %}
+  {% assign w_date = weight[0] %}
+  {% assign w = weight[1] %}
+    <li>{{ w_date | wdate }}
+      <span class="right">{{ w.weight }} {{ site.units.weight }}
+        <span class="fat">{{ w.fat }} % fat</span>
+      </span>
+    </li>
+  {% endfor %}
 </ul>
