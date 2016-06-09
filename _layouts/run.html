@@ -176,7 +176,9 @@ layout: default
         title: '',
         gridlines: {
           count: 0
-        }
+        },
+        minValue: {{ page.min_pace | minus:4 }},
+        maxValue: {{ page.max_pace | plus:4 }}
       },
       legend: {
         position: 'none'

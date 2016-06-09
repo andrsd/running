@@ -35,6 +35,8 @@ class Run
     @max_ele = -10000       # solid pressure this deep
     @min_ele =  10000       # higher than mount everest
     @pace = Array[ ]
+    @max_pace = -1
+    @min_pace =  10000
     @splits = Array[ ]
     @map_center_lat = 0
     @map_center_lon = 0
@@ -46,6 +48,12 @@ class Run
 
   def meters_to_feet(meters)
     return meters * 3.28084
+  end
+
+  def pace_fmt(pace)
+    mins = (pace / 60.0).to_i
+    secs = (pace.to_i % 60)
+    return sprintf("%d:%02d", mins, secs)
   end
 
   # haversine distnace between to points in meters
@@ -101,8 +109,14 @@ class Run
             @distance = @distance + distance_inc
             @duration = time - start_time
             if distance_inc > 0
-              p = (time - last_time) / meters_to_miles(distance_inc)
-              @pace.push(p.round(0).to_i)
+              p = ((time - last_time) / meters_to_miles(distance_inc)).round(0).to_i
+              if p > @max_pace
+                @max_pace = p
+              end
+              if p < @min_pace
+                @min_pace = p
+              end
+              @pace.push(p)
             end
 
             mile = meters_to_miles(@distance).ceil
@@ -170,7 +184,7 @@ class Run
     puts "map_center: '" + @map_center_lon.to_s + ", " + @map_center_lat.to_s + "'"
     puts "distance: " + meters_to_miles(@distance).round(2).to_s
     puts "duration: " + Time.at(@duration).utc.strftime("%H:%M:%S")
-    puts "avg_pace: " + Time.at(@avg_pace).utc.strftime("%M:%S")
+    puts "avg_pace: " + pace_fmt(@avg_pace)
     puts "calories: " + @calories.to_s
     puts "total_climb: " + meters_to_feet(@total_climb).round(0).to_s
     puts "elevation:"
@@ -181,13 +195,15 @@ class Run
     puts "max_ele: " + @max_ele.to_s
     puts "pace:"
     for i in @pace
-      puts "  - " + Time.at(i).utc.strftime("%M:%S").to_s
+      puts "  - " + i.to_s
     end
+    puts "min_pace: " + @min_pace.to_s
+    puts "max_pace: " + @max_pace.to_s
     puts "splits:"
     for i in @splits
       puts "  -"
       puts "    name: " + i["name"].to_s
-      puts "    pace: " + Time.at(i["pace"]).utc.strftime("%M:%S")
+      puts "    pace: " + pace_fmt(i["pace"])
       puts "    climb: " + meters_to_feet(i["climb"]).round(0).to_s
     end
     puts "---"
