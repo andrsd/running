@@ -11,7 +11,7 @@ module Jekyll
         def pace(time)
             mins = time / 60
             secs = time % 60
-            mins.to_i.to_s + ':' + secs.to_i.to_s
+            mins.to_i.to_s + ':' + sprintf("%02d", secs.to_i)
         end
 
         def wdate(str)
