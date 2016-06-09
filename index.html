@@ -8,6 +8,8 @@ layout: default
 {% assign min_pace_5k = 1000000 %}
 {% assign date_5k = 0 %}
 
+{% assign total_miles = 0 %}
+
 {% for post in site.posts %}
   {% if post.distance > max_distance %}
     {% assign max_distance = post.distance %}
@@ -17,6 +19,8 @@ layout: default
     {% assign min_pace_5k = post.avg_pace %}
     {% assign date_5k = post.date %}
   {% endif %}
+
+  {% assign total_miles = total_miles | plus: post.distance %}
 {% endfor %}
 
 <div class="home">
@@ -25,7 +29,7 @@ layout: default
     <div style="display: table">
       <ul class="box">
         <li style="text-transform: uppercase">Total {{ site.units.distance }}</li>
-        <li class="value">1 409</li>
+        <li class="value">{{ total_miles }}</li>
       </ul>
       <ul class="box">
         <li style="text-transform: uppercase">Total runs</li>
