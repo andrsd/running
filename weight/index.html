@@ -2,6 +2,8 @@
 layout: default
 ---
 
+{% assign weight_history = site.data.weight | sort | reversed limit:30 %}
+
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 google.charts.load('current', {'packages': ['corechart', 'line']});
@@ -12,7 +14,7 @@ function drawChart() {
   weight.addColumn('date', 'Day');
   weight.addColumn('number', 'weight [{{ site.units.weight }}]');
   weight.addRows([
-    {% for weight in site.data.weight limit: 30 %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].weight }}],
+    {% for weight in weight_history | reversed %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].weight }}],
     {% endfor %}
   ]);
   var weight_opts = {
@@ -40,7 +42,7 @@ function drawChart() {
   fat.addColumn('date', 'Day');
   fat.addColumn('number', 'fat [%]');
   fat.addRows([
-    {% for weight in site.data.weight limit: 30 %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].fat }}],
+    {% for weight in weight_history | reversed %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].fat }}],
     {% endfor %}
   ]);
   var fat_opts = {
@@ -66,18 +68,15 @@ function drawChart() {
 }
 </script>
 
-{% for weight in site.data.weight %}
-  {% assign latest = weight[1] %}
-{% endfor %}
-
+{% assign latest = weight_history | last %}
 <div style="display: table">
   <ul class="box">
     <li style="text-transform: uppercase">Weight</li>
-    <li class="value">{{ latest.weight }} {{ site.units.weight }}</li>
+    <li class="value">{{ latest[1].weight }} {{ site.units.weight }}</li>
   </ul>
   <ul class="box">
     <li style="text-transform: uppercase">Body fat</li>
-    <li class="value">{{ latest.fat }} %</li>
+    <li class="value">{{ latest[1].fat }} %</li>
   </ul>
 </div>
 
@@ -93,7 +92,7 @@ function drawChart() {
 <h3 style="text-transform: uppercase">History</h3>
 
 <ul class="history">
-  {% for weight in site.data.weight reversed limit: 10 %}
+  {% for weight in weight_history reversed %}
   {% assign w_date = weight[0] %}
   {% assign w = weight[1] %}
     <li>{{ w_date | wdate }}
