@@ -11,6 +11,7 @@
 #
 
 require 'time'
+require 'yaml'
 
 class Float
   def to_rad
@@ -176,6 +177,26 @@ class Run
     @map_center_lon /= n
   end
 
+  def kgs_to_lbs(kgs)
+    kgs * 2.20462
+  end
+
+  def current_weight
+    newest = ""
+    Dir.glob('_data/weight/*.yml') do |yml_file_name|
+      if yml_file_name > newest
+        newest = yml_file_name
+      end
+    end
+    yml = YAML.load_file(newest)
+    return yml["weight"]
+  end
+
+  def calories
+    kgs = current_weight
+    @calories = kgs_to_lbs(kgs) * 0.75 * meters_to_miles(@distance)
+  end
+
   def output
     puts "---"
     puts "layout: run"
@@ -185,7 +206,7 @@ class Run
     puts "distance: " + meters_to_miles(@distance).round(2).to_s
     puts "duration: " + Time.at(@duration).utc.strftime("%H:%M:%S")
     puts "avg_pace: " + pace_fmt(@avg_pace)
-    puts "calories: " + @calories.to_s
+    puts "calories: " + @calories.round(0).to_s
     puts "total_climb: " + meters_to_feet(@total_climb).round(0).to_s
     puts "elevation:"
     for i in @elevation
@@ -212,4 +233,5 @@ end
 
 main = Run.new(ARGV[0])
 main.analyze
+main.calories
 main.output
