@@ -156,7 +156,7 @@ layout: default
         bottom: 0
       }
     };
-    var elevation_chart = new google.visualization.LineChart(document.getElementById('elevation-chart'));
+    var elevation_chart = new google.visualization.AreaChart(document.getElementById('elevation-chart'));
     elevation_chart.draw(elevation, elevation_opts);
 
     var pace = new google.visualization.DataTable();
@@ -190,7 +190,7 @@ layout: default
         bottom: 0
       }
     };
-    var pace_chart = new google.visualization.LineChart(document.getElementById('pace-chart'));
+    var pace_chart = new google.visualization.AreaChart(document.getElementById('pace-chart'));
     pace_chart.draw(pace, pace_opts);
   }
   </script>
