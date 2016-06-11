@@ -200,7 +200,7 @@
  * Posts
  */
 .post-header {
-    margin-bottom: $spacing-unit;
+    margin-bottom: $spacing-unit / 2;
 }
 
 .post-title {
@@ -239,4 +239,10 @@
             font-size: 18px;
         }
     }
+}
+
+.tag {
+  color: #666;
+  font-size: 80%;
+  margin: 0 5px;
 }
