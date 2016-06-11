@@ -60,6 +60,45 @@ layout: default
   <div style="clear: both">
   </div>
 
+  <h3 style="text-transform: uppercase">Performance</h3>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+  google.charts.load('current', {'packages': ['corechart', 'line']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var pace = new google.visualization.DataTable();
+    pace.addColumn('date', 'Day');
+    pace.addColumn('number', 'pace');
+    pace.addRows([
+      {% for p in site.posts | limit: 30 %}[new Date({{ p.date | date: "%Y" }}, {{ p.date | date: "%m" | minus: 1 }}, {{ p.date | date: "%d"}}), {{ p.avg_pace }}],
+      {% endfor %}
+    ]);
+    var pace_opts = {
+      hAxis: {
+        title: '',
+        text_position: 'out'
+      },
+      vAxis: {
+        title: 'pace'
+      },
+      legend: {
+        position: 'none'
+      },
+      chartArea: {
+        left: 0,
+        right: 0,
+        top: 10,
+        bottom: 30
+      }
+    };
+    var pace_chart = new google.visualization.AreaChart(document.getElementById('perf-chart'));
+    pace_chart.draw(pace, pace_opts);
+  }
+  </script>
+  <div id="perf-chart" style="border: 0; height: 150px; margin: 1em 0">
+  </div>
+
   <h3 style="text-transform: uppercase">Recent Activities</h3>
   <ul class="post-list">
     {% for post in site.posts %}
