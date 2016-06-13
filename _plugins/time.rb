@@ -5,13 +5,13 @@ module Jekyll
             time = time % 3600
             mins = time / 60
             secs = time % 60
-            hours.to_i.to_s + ':' + mins.to_i.to_s + ':' + secs.to_i.to_s
+            hours.to_i.to_s + ':' + sprintf("%02d", mins.to_i) + ':' + sprintf("%02d", secs.to_i)
         end
 
         def pace(time)
             mins = time / 60
             secs = time % 60
-            mins.to_i.to_s + ':' + sprintf("%02d", secs.to_i)
+            sprintf("%02d", mins.to_i) + ':' + sprintf("%02d", secs.to_i)
         end
 
         def distance(dist)
