@@ -72,11 +72,11 @@ function drawChart() {
 <div style="display: table">
   <ul class="box">
     <li style="text-transform: uppercase">Weight</li>
-    <li class="value">{{ latest[1].weight }} {{ site.units.weight }}</li>
+    <li class="value">{{ latest[1].weight | round: 1 }} {{ site.units.weight }}</li>
   </ul>
   <ul class="box">
     <li style="text-transform: uppercase">Body fat</li>
-    <li class="value">{{ latest[1].fat }} %</li>
+    <li class="value">{{ latest[1].fat | round: 1 }} %</li>
   </ul>
 </div>
 
@@ -96,8 +96,8 @@ function drawChart() {
   {% assign w_date = weight[0] %}
   {% assign w = weight[1] %}
     <li>{{ w_date | wdate }}
-      <span class="right">{{ w.weight }} {{ site.units.weight }}
-        <span class="fat">{{ w.fat }} % fat</span>
+      <span class="right">{{ w.weight | round: 1 }} {{ site.units.weight }}
+        <span class="fat">{{ w.fat | round: 1 }} % fat</span>
       </span>
     </li>
   {% endfor %}
