@@ -12,6 +12,8 @@
 
 require 'time'
 require 'yaml'
+require 'rexml/document'
+include REXML
 
 class Float
   def to_rad
@@ -71,85 +73,89 @@ class Run
   def analyze
     n = 0
     start_time = Time.new(0)
-    File.open(@gpx_name, "r") do |f|
-      first = true
-      last_time = 0
-      last_lat = 0
-      last_lon = 0
-      last_ele = 0
-      last_mile = 1
-      split_climb = 0
-      split_time = 0
-      split_distance = 0
 
-      while (line = f.gets) != nil
-        if (line =~ /\<trkpt lat="(.+)" lon="(.+)"\>\<ele\>(.+)\<\/ele\>\<time\>(.+)\<\/time\>\<\/trkpt\>/)
-          lat = Regexp.last_match(1).to_f
-          lon = Regexp.last_match(2).to_f
-          ele = Regexp.last_match(3).to_f
-          time = Time.parse(Regexp.last_match(4)).to_time
+    gpx_file = File.new(@gpx_name)
+    gpx = Document.new(gpx_file)
 
-          if ele > @max_ele
-            @max_ele = ele
+    first = true
+    last_time = 0
+    last_lat = 0
+    last_lon = 0
+    last_ele = 0
+    last_mile = 1
+    split_climb = 0
+    split_time = 0
+    split_distance = 0
+    mile = 0
+    time = nil
+
+    gpx.elements.each("gpx/trk/trkseg/trkpt") {
+      |e|
+      lat = e.attributes["lat"].to_f
+      lon = e.attributes["lon"].to_f
+      ele = e.elements["ele"].text.to_f
+      time = Time.parse(e.elements["time"].text).to_time
+
+      if ele > @max_ele
+        @max_ele = ele
+      end
+      if ele < @min_ele
+        @min_ele = ele
+      end
+
+      if (first)
+        last_time = time
+        start_time = time
+        split_climb = 0
+        split_time = start_time
+        first = false
+      else
+        if ele > last_ele
+          @total_climb += ele - last_ele
+        end
+        distance_inc = distance(last_lat, last_lon, lat, lon)
+        @distance = @distance + distance_inc
+        @duration = time - start_time
+        if distance_inc > 0 and time - last_time > 0
+          p = ((time - last_time) / meters_to_miles(distance_inc)).round(0).to_i
+          if p > @max_pace
+            @max_pace = p
           end
-          if ele < @min_ele
-            @min_ele = ele
+          if p < @min_pace
+            @min_pace = p
           end
+          @pace.push(p)
+        end
 
-          if (first)
-            last_time = time
-            start_time = time
-            split_climb = 0
-            split_time = start_time
-            first = false
-          else
-            if ele > last_ele
-              @total_climb += ele - last_ele
-            end
-            distance_inc = distance(last_lat, last_lon, lat, lon)
-            @distance = @distance + distance_inc
-            @duration = time - start_time
-            if distance_inc > 0
-              p = ((time - last_time) / meters_to_miles(distance_inc)).round(0).to_i
-              if p > @max_pace
-                @max_pace = p
-              end
-              if p < @min_pace
-                @min_pace = p
-              end
-              @pace.push(p)
-            end
-
-            mile = meters_to_miles(@distance).ceil
-            if mile > last_mile
-              @splits.push(Hash[
-                "name" => (mile - 1).to_s + " mile",
-                "climb" => @total_climb - split_climb,
-                "pace" => (time - split_time)
-              ])
-              last_mile = mile
-              split_climb = @total_climb
-              split_time = time
-              split_distance = @distance
-            end
-          end
-          last_time = time
-          last_lat = lat
-          last_lon = lon
-          last_ele = ele
-          @elevation.push(ele)
-          @map_center_lat = @map_center_lat + lat
-          @map_center_lon = @map_center_lon + lon
-          n = n + 1
+        mile = meters_to_miles(@distance).ceil
+        if mile > last_mile
+          @splits.push(Hash[
+            "name" => (mile - 1).to_s + " mile",
+            "climb" => @total_climb - split_climb,
+            "pace" => (time - split_time)
+          ])
+          last_mile = mile
+          split_climb = @total_climb
+          split_time = time
+          split_distance = @distance
         end
       end
-      # and the values for the last split
-      @splits.push(Hash[
-        "name" => mile.to_s + " mile",
-        "climb" => @total_climb - split_climb,
-        "pace" => (time - split_time) / meters_to_miles(@distance - split_distance)
-      ])
-    end
+      last_time = time
+      last_lat = lat
+      last_lon = lon
+      last_ele = ele
+      @elevation.push(ele)
+      @map_center_lat = @map_center_lat + lat
+      @map_center_lon = @map_center_lon + lon
+      n = n + 1
+    }
+    # and the values for the last split
+    @splits.push(Hash[
+      "name" => mile.to_s + " mile",
+      "climb" => @total_climb - split_climb,
+      "pace" => (time - split_time) / meters_to_miles(@distance - split_distance)
+    ])
+
     #
     case start_time.wday
     when 0
