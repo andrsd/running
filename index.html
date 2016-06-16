@@ -15,7 +15,7 @@ layout: default
     {% assign max_distance = post.distance %}
     {% assign max_distance_date = post.date %}
   {% endif %}
-  {% if post.distance == 3.2 and post.avg_pace < min_pace_5k %}
+  {% if ((3.15 < post.distance < 3.3) or (post.tags contains '5K')) and post.avg_pace < min_pace_5k %}
     {% assign min_pace_5k = post.avg_pace %}
     {% assign date_5k = post.date %}
   {% endif %}
