@@ -151,7 +151,7 @@ class Run
     }
     # and the values for the last split
     @splits.push(Hash[
-      "name" => mile.to_s + " mile",
+      "name" => meters_to_miles(@distance).round(2).to_s + " mile",
       "climb" => @total_climb - split_climb,
       "pace" => (time - split_time) / meters_to_miles(@distance - split_distance)
     ])
