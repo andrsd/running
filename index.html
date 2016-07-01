@@ -15,12 +15,12 @@ layout: default
     {% assign max_distance = post.distance %}
     {% assign max_distance_date = post.date %}
   {% endif %}
-  {% if ((3.15 < post.distance < 3.3) or (post.tags contains '5K')) and post.avg_pace < min_pace_5k %}
+  {% if ((4.9 < post.distance < 5.3) or (post.tags contains '5K')) and post.avg_pace < min_pace_5k %}
     {% assign min_pace_5k = post.avg_pace %}
     {% assign date_5k = post.date %}
   {% endif %}
 
-  {% assign total_miles = total_miles | plus: post.distance %}
+  {% assign total_kms = total_kms | plus: post.distance %}
 {% endfor %}
 
 <div class="home">
@@ -29,7 +29,7 @@ layout: default
     <div style="display: table">
       <ul class="box">
         <li style="text-transform: uppercase">Total {{ site.units.distance }}</li>
-        <li class="value">{{ total_miles | distance }}</li>
+        <li class="value">{{ total_kms | distance }}</li>
       </ul>
       <ul class="box">
         <li style="text-transform: uppercase">Total runs</li>

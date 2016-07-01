@@ -49,6 +49,10 @@ class Run
     return meters / 1609.34
   end
 
+  def meters_to_kms(meters)
+    return meters / 1000.0
+  end
+
   def meters_to_feet(meters)
     return meters * 3.28084
   end
@@ -82,11 +86,11 @@ class Run
     last_lat = 0
     last_lon = 0
     last_ele = 0
-    last_mile = 1
+    last_km = 1
     split_climb = 0
     split_time = 0
     split_distance = 0
-    mile = 0
+    km = 0
     time = nil
 
     gpx.elements.each("gpx/trk/trkseg/trkpt") {
@@ -117,7 +121,7 @@ class Run
         @distance = @distance + distance_inc
         @duration = time - start_time
         if distance_inc > 0 and time - last_time > 0
-          p = ((time - last_time) / meters_to_miles(distance_inc)).round(0).to_i
+          p = ((time - last_time) / meters_to_kms(distance_inc)).round(0).to_i
           if p > @max_pace
             @max_pace = p
           end
@@ -127,14 +131,14 @@ class Run
           @pace.push(p)
         end
 
-        mile = meters_to_miles(@distance).ceil
-        if mile > last_mile
+        km = meters_to_kms(@distance).ceil
+        if km > last_km
           @splits.push(Hash[
-            "name" => (mile - 1).to_s + " mile",
+            "name" => (km - 1).to_s + " km",
             "climb" => @total_climb - split_climb,
             "pace" => (time - split_time)
           ])
-          last_mile = mile
+          last_km = km
           split_climb = @total_climb
           split_time = time
           split_distance = @distance
@@ -151,9 +155,9 @@ class Run
     }
     # and the values for the last split
     @splits.push(Hash[
-      "name" => meters_to_miles(@distance).round(2).to_s + " mile",
+      "name" => meters_to_kms(@distance).round(2).to_s + " km",
       "climb" => @total_climb - split_climb,
-      "pace" => (time - split_time) / meters_to_miles(@distance - split_distance)
+      "pace" => (time - split_time) / meters_to_kms(@distance - split_distance)
     ])
 
     #
@@ -175,7 +179,7 @@ class Run
     end
     @title = @title + " run"
     #
-    @avg_pace = @duration / meters_to_miles(@distance)
+    @avg_pace = @duration / meters_to_kms(@distance)
     #
     @calories = 0
     # compute the map center
@@ -209,11 +213,11 @@ class Run
     puts "title: " + @title
     puts "gpx: " + "'" + @gpx + "'"
     puts "map_center: '" + @map_center_lon.to_s + ", " + @map_center_lat.to_s + "'"
-    puts "distance: " + meters_to_miles(@distance).round(2).to_s
+    puts "distance: " + meters_to_kms(@distance).round(2).to_s
     puts "duration: " + Time.at(@duration).utc.strftime("%H:%M:%S")
     puts "avg_pace: " + pace_fmt(@avg_pace)
     puts "calories: " + @calories.round(0).to_s
-    puts "total_climb: " + meters_to_feet(@total_climb).round(0).to_s
+    puts "total_climb: " + @total_climb.round(0).to_s
     puts "elevation:"
     for i in @elevation
       puts "  - " + i.to_s
@@ -231,8 +235,14 @@ class Run
       puts "  -"
       puts "    name: " + i["name"].to_s
       puts "    pace: " + pace_fmt(i["pace"])
-      puts "    climb: " + meters_to_feet(i["climb"]).round(0).to_s
+      puts "    climb: " + i["climb"].round(0).to_s
     end
+    puts "feeling: alright"
+    puts "weather: ''"
+    puts "effort: 3"
+    puts "tags:"
+    puts "  - 5K"
+    puts "  - training"
     puts "---"
   end
 end

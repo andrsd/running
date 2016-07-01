@@ -9,5 +9,5 @@ github_username: andrsd
 markdown: kramdown
 
 units:
-  distance: miles
+  distance: km
   weight: kgs
