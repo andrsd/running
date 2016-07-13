@@ -95,7 +95,7 @@ layout: default
     }),
     view: new ol.View({
       center: ol.proj.fromLonLat([{{ page.map_center }}]),
-      zoom: 14
+      zoom: {% if page.zoom %}{{ page.zoom }}{% else %}14{% endif %}
     })
   });
 
