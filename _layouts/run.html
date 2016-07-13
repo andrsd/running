@@ -41,7 +41,11 @@ layout: default
   <div id="info">&nbsp;</div>
   <script type="text/javascript">
   var raster = new ol.layer.Tile({
-    source: new ol.source.MapQuest({layer: 'osm'})
+    source: new ol.source.OSM({
+      attributions: [
+        'All maps © <a href="http://www.openstreetmap.org/">OpenStreetMap</a>'
+      ]
+    })
   });
 
   var style = {
@@ -84,6 +88,11 @@ layout: default
   var map = new ol.Map({
     layers: [raster, vector],
     target: document.getElementById('map'),
+    controls: ol.control.defaults({
+      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        collapsible: false
+      })
+    }),
     view: new ol.View({
       center: ol.proj.fromLonLat([{{ page.map_center }}]),
       zoom: 14
