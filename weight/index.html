@@ -2,7 +2,9 @@
 layout: default
 ---
 
-{% assign weight_history = site.data.weight | sort | reversed limit:30 %}
+{% assign weight_history = site.data.weight | sort %}
+{% assign num = 15 %}
+{% assign ofst = weight_history.size | minus:num %}
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
@@ -14,7 +16,7 @@ function drawChart() {
   weight.addColumn('date', 'Day');
   weight.addColumn('number', 'weight [{{ site.units.weight }}]');
   weight.addRows([
-    {% for weight in weight_history | reversed %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].weight }}],
+    {% for weight in weight_history reversed limit:num offset:ofst %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].weight }}],
     {% endfor %}
   ]);
   var weight_opts = {
@@ -42,7 +44,7 @@ function drawChart() {
   fat.addColumn('date', 'Day');
   fat.addColumn('number', 'fat [%]');
   fat.addRows([
-    {% for weight in weight_history | reversed %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].fat }}],
+    {% for weight in weight_history reversed limit:num offset:ofst %}[new Date({{ weight[0] | jsdate }}), {{ weight[1].fat }}],
     {% endfor %}
   ]);
   var fat_opts = {
@@ -92,7 +94,7 @@ function drawChart() {
 <h3 style="text-transform: uppercase">History</h3>
 
 <ul class="history">
-  {% for weight in weight_history reversed %}
+  {% for weight in weight_history reversed limit:num offset:ofst %}
   {% assign w_date = weight[0] %}
   {% assign w = weight[1] %}
     <li>{{ w_date | wdate }}
